@@ -1,0 +1,3 @@
+define(['core'], function(core) {
+
+});

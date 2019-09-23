@@ -1,3 +1,7 @@
-define(['core'], function(core) {
+define(['core', 
+    'context',
+    'attr'
+    ], function(jXrm) {
 
+    return jXrm;
 });

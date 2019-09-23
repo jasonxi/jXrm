@@ -12,7 +12,8 @@
     "express": "^4.17.1",
     "expressjs": "^1.0.1",
     "grunt": "^1.0.4",
-    "requirejs": "^2.3.6"
+    "requirejs": "^2.3.6",
+    "xrm-mock": "^3.4.15"
   },
   "devDependencies": {
     "amdclean": "^2.7.0",

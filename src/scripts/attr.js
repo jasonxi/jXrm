@@ -15,35 +15,50 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         // Get / set value
         val: function(v) {
             if (v=== undefined) 
-                return this.attribute.getValue();
+                if (this.attributes.length === 1) 
+                    return this.attributes.first.getValue();
+                else
+                    return this.attributes.items.map(function(a) {
+                        return a.getValue();
+                    });
             else {
-                this.attribute.setValue(v);
+                this.attributes.exec(function(a) {
+                    a.setValue(v);
+                });
                 return this;
             }
         },
         // Set focus
         focus : function() {
-            this.control.setFocus();
+            this.controls.first.setFocus();
             return this;
         },
         // Set requirement
         setRequiredLevel : function(level) {
-            this.control.setRequiredLevel(level);
+            this.controls.exec(function(c) {
+                c.setRequiredLevel(level);
+            });
             return this;
         },
         // Set submit mode
         setSubmitMode : function(mode) {
-            this.control.setSubmitMode(mode);
+            this.controls.exec(function(c) {
+                c.setSubmitMode(level);
+            }); 
             return this;
         },
         // Show
         show : function() {
-            this.control.setVisible(true);
+            this.controls.exec(function(c) {
+                c.setVisible(true);
+            }); 
             return this;
         },
         // Hide
         hide : function() {
-            this.control.setVisible(false);
+            this.controls.exec(function(c) {
+                c.setVisible(false);
+            }); 
             return this;
         }
     });

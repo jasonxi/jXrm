@@ -12,7 +12,7 @@ module.exports = function(grunt) {
             optimize: 'none',
             mainConfigFile: 'config/main.js',
             useStrict: true,
-            wrap: true,
+            wrap: false,
             onModuleBundleComplete: function (data) {
                 var fs = require('fs'),
                   amdclean = require('amdclean'),
@@ -38,18 +38,29 @@ module.exports = function(grunt) {
           start: [
               'build/*'
           ]
-      }
+      },
+      // mocha: {
+      //   all: {
+      //     src: ['test/*.test.ts'],
+      //   },
+      //   options: {
+      //     run: true
+      //   }
+      // }
+  
     });
   
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-  
+//    grunt.loadNpmTasks('grunt-mocha');
+
     // Default task(s).
     grunt.registerTask('default', [
-        'clean:start',
-        'requirejs:build',
-        'uglify'
+      'clean:start',
+      'requirejs:build',
+//      'mocha',
+      'uglify'
     ]);
   
   };

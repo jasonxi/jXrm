@@ -29,6 +29,32 @@ define([], function() {
                 };
             }
             Object.assign(t, s);    
+        },
+        toObject: function(obj, props) {
+            if (!obj) obj = {};
+            props.forEach(function(prop) {
+                if (prop !== null) {
+                    var p = prop.split('|');
+                    if (!p[1]) p[1] = p[0];
+                    obj[p[0]] = function(x) {
+                        var c = p[2] === 'a'? obj.attributes : obj.controls;
+                        if (p[4]) x=p[4];
+                        if (c) {
+                            if (p[3]) { // return
+                                return c.exec(function(o) {
+                                    return (o && o[p[1]]) ? o[p[1]](x) : null;
+                                });
+                            } else {
+                                c.exec(function(o) {
+                                    if (o && o[p[1]]) o[p[1]](x);
+                                });
+                                return obj;
+                            }
+                        }
+                    }
+                }
+            });
+            return obj;
         }
     };
 });

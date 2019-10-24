@@ -11,55 +11,52 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
             Dirty: 'dirty'
         }
     });
+    // method name | sdk method name | collection | return value | paramenter
+    var m = ['getType|getAttributeType|a|1', 
+        'isDirty|getIsDirty|a|1', 
+        'isPartyList|getIsPartyList|a|1', 
+        'maxLength|getMaxLength|a|1',
+        'setRequiredLevel||c',
+        'required|setRequiredLevel|c||required',
+        'recommended|setRequiredLevel|c||recommended',
+        'getSubmitMode||a|1',
+        'setSubmitMode||a',
+        'getVisible||c|1',
+        'show|setVisible|c||1',
+        'hide|setVisible|c||0',
+        'parent|getParent|a|1',
+        'getPrivilege|getUserPrivilege|a|1',
+        'change|addOnChange|a',
+        ''
+    ];
+    util.toObject(jXrm.fn, m);
+
     util.extend(jXrm.fn, {
-        // Get / set value
-        val: function(v) {
+        val: function(v, fireOnChange) {
             if (v=== undefined) 
-                if (this.attributes.length === 1) 
-                    return this.attributes.first.getValue();
-                else
-                    return this.attributes.items.map(function(a) {
-                        return a.getValue();
-                    });
+                return this.attributes.exec(function(a) {
+                    return a && a.getValue ? a.getValue() : null;
+                });
             else {
                 this.attributes.exec(function(a) {
-                    a.setValue(v);
+                    if (a && a.setValue) a.setValue(v);
+                    if (fireOnChange === true) a.fireOnChange();
                 });
                 return this;
             }
         },
-        // Set focus
         focus : function() {
-            this.controls.first.setFocus();
+            if(this.controls.first && this.controls.first.setFocus) this.controls.first.setFocus();
             return this;
         },
-        // Set requirement
-        setRequiredLevel : function(level) {
+        toggleVisible : function() {
             this.controls.exec(function(c) {
-                c.setRequiredLevel(level);
+                if (c && c.setVisible) c.setVisible(!c.getVsible());
             });
             return this;
         },
-        // Set submit mode
-        setSubmitMode : function(mode) {
-            this.controls.exec(function(c) {
-                c.setSubmitMode(level);
-            }); 
-            return this;
-        },
-        // Show
-        show : function() {
-            this.controls.exec(function(c) {
-                c.setVisible(true);
-            }); 
-            return this;
-        },
-        // Hide
-        hide : function() {
-            this.controls.exec(function(c) {
-                c.setVisible(false);
-            }); 
-            return this;
+        on: function(evt, handler) {
+            
         }
     });
 

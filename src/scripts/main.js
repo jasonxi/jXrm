@@ -1,6 +1,9 @@
-require(['core', 
+require([
+    'core', 
+    'global',
     'context',
-    'attr'
+    'attr',
+    'ui'
     ], function(jXrm) {
     window.jXrm = jXrm;
     return jXrm;

@@ -1,5 +1,5 @@
 import {JSDOM} from 'jsdom';
-import { XrmMockGenerator } from "xrm-mock";
+import { XrmMockGenerator,  ClientContextMock, ContextMock, UserSettingsMock, UiMock, FormSelectorMock, ItemCollectionMock, FormItemMock, EntityMock } from "xrm-mock";
 import assert from "assert";
 
 describe("jXrm unit tests", ()=> {
@@ -23,6 +23,63 @@ describe("jXrm unit tests", ()=> {
     it("should not be Null", () => {
       assert.notEqual(jXrm, null);
     })
+  });
+
+  // Xrm context
+  describe("Test Context values", ()  => {
+    beforeEach(() => {
+      const globalContext = new ContextMock(
+        {
+            clientContext: new ClientContextMock("Web", "Online"),
+            clientUrl: "https://org.crm.dynamics.com/",
+            currentTheme: "default",
+            isAutoSaveEnabled: false,
+            orgLcid: 1031,
+            orgUniqueName: "Contoso",
+            timeZoneOffset: 0,
+            userId: "{B05EC7CE-5D51-DF11-97E0-00155DB232D0}",
+            userLcid: 1033,
+            userName: "Joe Bloggs",
+            userRoles: ["cf4cc7ce-5d51-df11-97e0-00155db232d0"],
+            userSettings: new UserSettingsMock(
+                {
+                    isGuidedHelpEnabled: false,
+                    isHighContrastEnabled: false,
+                    isRTL: false,
+                    languageId: 1033,
+                    securityRoles: ["cf4cc7ce-5d51-df11-97e0-00155db232d0"],
+                    userId: "1337",
+                    userName: "jdoe",
+                }),
+            version: "8.2.1.185",
+        });
+      XrmMockGenerator.initialise({
+        context: globalContext,
+        ui: new UiMock({
+          formSelector: new FormSelectorMock(new ItemCollectionMock<FormItemMock>(
+            [
+              new FormItemMock({
+                currentItem: true,
+                formType: 2,
+                id: '5',
+                label: 'Main'
+              })
+            ]
+          ))
+        }),
+        entity: new EntityMock({
+          //attributes: new ItemCollectionMock<Xrm.Attributes.Attribute>([nameAttribute]),
+          entityName: "account",
+          id: "{00000000-0000-0000-0000-000000000000}"
+        })
+      });
+    });
+    describe("User context", () => {
+      it('should match inital user data', () => {
+        assert.equal(jXrm.context.getUserId(), Xrm.Page.context.getUserId());
+        assert.equal(jXrm.context.getUserName(), Xrm.Page.context.getUserName());
+      });
+    });
   });
 
   // Attribute functions
@@ -106,6 +163,13 @@ describe("jXrm unit tests", ()=> {
         // console.log(result);
         assert.equal(result, 'always');
       });    
+    });    
+
+    describe("Requirement  level", () => {
+      it("should be recommended", ()=> {
+        jXrm('#firstname').recommended();
+//        assert.equal(result, 'dirty');
+      })   
     });    
 
     describe("Is Dirty", () => {

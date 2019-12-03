@@ -36,17 +36,20 @@ define([], function() {
                 if (prop !== null) {
                     var p = prop.split('|');
                     if (!p[1]) p[1] = p[0];
-                    obj[p[0]] = function(x) {
+                    obj[p[0]] = function() {
                         var c = p[2] === 'a'? obj.attributes : obj.controls;
-                        if (p[4]) x=p[4];
+                        var args = [];
+                        for(var i=0; i<arguments.length; i++)
+                            args[i] = arguments[i];
+                        if (p[4]) args[0] =p[4];
                         if (c) {
                             if (p[3]) { // return
                                 return c.exec(function(o) {
-                                    return (o && o[p[1]]) ? o[p[1]](x) : null;
+                                    return (o && o[p[1]]) ? o[p[1]].apply(o, args) : null;
                                 });
                             } else {
                                 c.exec(function(o) {
-                                    if (o && o[p[1]]) o[p[1]](x);
+                                    if (o && o[p[1]]) o[p[1]].apply(o, args);
                                 });
                                 return obj;
                             }

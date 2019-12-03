@@ -15,10 +15,12 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
     var m = ['getType|getAttributeType|a|1', 
         'isDirty|getIsDirty|a|1', 
         'isPartyList|getIsPartyList|a|1', 
+        'isValid||a|1',
         'maxLength|getMaxLength|a|1',
-        'setRequiredLevel||c',
-        'required|setRequiredLevel|c||required',
-        'recommended|setRequiredLevel|c||recommended',
+        'getRequiredLevel||a|1',
+        'setRequiredLevel||a',
+        'required|setRequiredLevel|a||required',
+        'recommended|setRequiredLevel|a||recommended',
         'getSubmitMode||a|1',
         'setSubmitMode||a',
         'getVisible||c|1',
@@ -27,7 +29,11 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         'parent|getParent|a|1',
         'getPrivilege|getUserPrivilege|a|1',
         'change|addOnChange|a',
-        ''
+        'removeOnChange||a',
+        'fireOnChange||a',
+
+        'addCustomFilter||c',
+        
     ];
     util.toObject(jXrm.fn, m);
 

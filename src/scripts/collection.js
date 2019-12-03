@@ -14,7 +14,7 @@ define([], function() {
             } else if (this.items.length > 1 && callback) {
                 var r = {};
                 this.items.forEach(function(a) {
-                    r[a.name] = callback(a); 
+                    r[a.getName()] = callback(a); 
                 });
                 return r;
             }

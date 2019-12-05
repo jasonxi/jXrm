@@ -247,6 +247,7 @@ attr = function (jXrm, util) {
     'getSubmitMode||a|1',
     'setSubmitMode||a',
     'getVisible||c|1',
+    'setVisible||c',
     'show|setVisible|c||1',
     'hide|setVisible|c||0',
     'parent|getParent|a|1',

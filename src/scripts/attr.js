@@ -9,7 +9,7 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
             Always: 'always',
             Never: 'never',
             Dirty: 'dirty'
-        }
+        } 
     });
     // method name | sdk method name | collection | return value | paramenter
     var m = ['getType|getAttributeType|a|1', 

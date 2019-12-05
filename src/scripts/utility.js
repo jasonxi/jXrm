@@ -41,7 +41,7 @@ define([], function() {
                         var args = [];
                         for(var i=0; i<arguments.length; i++)
                             args[i] = arguments[i];
-                        if (p[4]) args[0] =p[4];
+                        if (p[4]) args[0] = p[4] === '1' ? true : p[4] === '0' ? false : p[4];
                         if (c) {
                             if (p[3]) { // return
                                 return c.exec(function(o) {

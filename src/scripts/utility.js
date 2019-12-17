@@ -37,7 +37,7 @@ define([], function() {
                     var p = prop.split('|');
                     if (!p[1]) p[1] = p[0];
                     obj[p[0]] = function() {
-                        var c = p[2] === 'a'? obj.attributes : obj.controls;
+                        var c = p[2] === 'a'? this.attributes : this.controls;
                         var args = [];
                         for(var i=0; i<arguments.length; i++)
                             args[i] = arguments[i];
@@ -51,7 +51,7 @@ define([], function() {
                                 c.exec(function(o) {
                                     if (o && o[p[1]]) o[p[1]].apply(o, args);
                                 });
-                                return obj;
+                                return this;
                             }
                         }
                     }

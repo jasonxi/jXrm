@@ -89,6 +89,7 @@ describe("jXrm unit tests", ()=> {
       XrmMockGenerator.Attribute.createString("lastname", "Dole");
       XrmMockGenerator.Attribute.createDate("dob", new Date());
     });
+
     describe("Get value", () => {
       it("should get value Joe", ()=> {
         // let name = Xrm.Page.getAttribute("firstname").getValue();
@@ -107,6 +108,19 @@ describe("jXrm unit tests", ()=> {
         jXrm('#firstname').val(null);
         let name = jXrm('#firstname').val();
         assert.equal(name, null);
+      })
+    });
+
+    describe("Nested calls", () => {
+      it('should get value Joe', () => {
+        jXrm('#firstname').val('Joe');
+        jXrm('#lastname').val('Dole');
+        jXrm('#lastname').val(jXrm('#firstname').val() + "1");
+        let name = jXrm('#lastname').val();
+        console.log('First Name:' + jXrm('#firstname').val());
+        console.log('Last Name:' + name);
+        assert.equal(name, 'Joe1');
+        assert.equal(jXrm('#firstname').val(), 'Joe');
       })
     });
 
@@ -130,6 +144,7 @@ describe("jXrm unit tests", ()=> {
 
     describe("Get attribute types", () => {
       it("should be string and datetime", ()=> {
+        jXrm('#firstname').val('Joe');
         let types = jXrm('#firstname, #dob').getType();
         // console.log(types);
         assert.equal(types.firstname, 'string');

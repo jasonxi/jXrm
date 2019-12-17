@@ -91,31 +91,28 @@ core = function (xrm, sltr, Collection) {
   if (typeof jXrm === 'undefined') {
     jXrm = { __namespace: true };
   }
-  var ver = '0.01';
-  jXrm = function (selector, context) {
-    return jXrm.fn.init(selector, context);
-  };
-  jXrm.fn = jXrm.prototype = {
-    version: ver,
-    init: function (selector, ctx) {
-      var attrs = this.attributes = new Collection();
-      var ctrls = this.controls = new Collection();
-      var elms = sltr.parse(selector);
-      if (elms.length > 0) {
-        elms.forEach(function (elm) {
-          switch (elm.type) {
-          case 'ID':
-            attrs.push(Xrm.Page.getAttribute(elm.id));
-            ctrls.push(Xrm.Page.getControl(elm.id));
-          }
-        });
-      } else {
-        console.log('Invalid selector.');
-      }
-      this.context = null;
-      return this;
+  var ver = '0.02';
+  var func = function (selector, context) {
+    var attrs = this.attributes = new Collection();
+    var ctrls = this.controls = new Collection();
+    var elms = sltr.parse(selector);
+    if (elms.length > 0) {
+      elms.forEach(function (elm) {
+        switch (elm.type) {
+        case 'ID':
+          attrs.push(Xrm.Page.getAttribute(elm.id));
+          ctrls.push(Xrm.Page.getControl(elm.id));
+        }
+      });
+    } else {
+      console.log('Invalid selector.');
     }
   };
+  jXrm = function (selector, context) {
+    return new func(selector, context);
+  };
+  jXrm.fn0 = func.prototype = {};
+  jXrm.fn = jXrm.prototype = { version: ver };
   jXrm.enum = {};
   return jXrm;
 }(xrm, selector, collection);
@@ -194,7 +191,7 @@ utility = {
         if (!p[1])
           p[1] = p[0];
         obj[p[0]] = function () {
-          var c = p[2] === 'a' ? obj.attributes : obj.controls;
+          var c = p[2] === 'a' ? this.attributes : this.controls;
           var args = [];
           for (var i = 0; i < arguments.length; i++)
             args[i] = arguments[i];
@@ -211,7 +208,7 @@ utility = {
                 if (o && o[p[1]])
                   o[p[1]].apply(o, args);
               });
-              return obj;
+              return this;
             }
           }
         };
@@ -257,8 +254,8 @@ attr = function (jXrm, util) {
     'fireOnChange||a',
     'addCustomFilter||c'
   ];
-  util.toObject(jXrm.fn, m);
-  util.extend(jXrm.fn, {
+  util.toObject(jXrm.fn0, m);
+  util.extend(jXrm.fn0, {
     val: function (v, fireOnChange) {
       if (v === undefined)
         return this.attributes.exec(function (a) {

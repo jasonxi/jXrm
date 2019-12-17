@@ -36,9 +36,9 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         'addCustomFilter||c',
         
     ];
-    util.toObject(jXrm.fn, m);
+    util.toObject(jXrm.fn0, m);
 
-    util.extend(jXrm.fn, {
+    util.extend(jXrm.fn0, {
         val: function(v, fireOnChange) {
             if (v=== undefined) 
                 return this.attributes.exec(function(a) {

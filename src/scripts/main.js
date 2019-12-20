@@ -3,7 +3,8 @@ require([
     'global',
     'context',
     'attr',
-    'ui'
+    'ui',
+    'data'
     ], function(jXrm) {
     window.jXrm = jXrm;
     return jXrm;

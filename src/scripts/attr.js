@@ -32,6 +32,8 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         'change|addOnChange|a',
         'removeOnChange||a',
         'fireOnChange||a',
+        'getOption||a|1',
+        'getOptions||a|1',
 
         'addCustomFilter||c',
         

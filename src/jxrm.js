@@ -1,5 +1,5 @@
 ;(function() {
-var xrm, selector, collection, core, global, context, utility, attr, ui, main;
+var xrm, selector, collection, core, global, context, utility, attr, ui, data, main;
 xrm = function () {
   if (typeof Xrm === 'undefined') {
     window.Xrm = { __namespace: true };
@@ -252,6 +252,8 @@ attr = function (jXrm, util) {
     'change|addOnChange|a',
     'removeOnChange||a',
     'fireOnChange||a',
+    'getOption||a|1',
+    'getOptions||a|1',
     'addCustomFilter||c'
   ];
   util.toObject(jXrm.fn0, m);
@@ -397,6 +399,17 @@ ui = function (jXrm, util, global) {
   });
   return jXrm;
 }(core, utility, global);
+data = function (jXrm, util) {
+  util.extend(jXrm, {
+    save: function (successHandler, errHandler) {
+      Xrm.Page.data.save().then(successHandler, errHandler);
+    },
+    refresh: function (save, successHandler, errHandler) {
+      Xrm.Page.data.refresh(save).then(successHandler, errHandler);
+    }
+  });
+  return jXrm;
+}(core, utility);
 (function (jXrm) {
   window.jXrm = jXrm;
   return jXrm;

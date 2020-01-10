@@ -34,8 +34,8 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         'fireOnChange||a',
         'getOption||a|1',
         'getOptions||a|1',
-        'disable|setDisable|c||1',
-        'enable|setDisable|c||0',
+        'disable|setDisabled|c||1',
+        'enable|setDisabled|c||0',
         'addCustomFilter||c',
         
     ];

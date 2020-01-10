@@ -187,6 +187,11 @@ describe("jXrm unit tests", ()=> {
       })   
     });    
 
+    // describe("Readonly", () => {
+    //   it("should be readonly", ()=> {
+    //     jXrm('#firstname').disable();
+    //   })
+    // })
     describe("Is Dirty", () => {
       it("should be false", ()=> {
         let result = jXrm('#dob').isDirty();

@@ -254,6 +254,8 @@ attr = function (jXrm, util) {
     'fireOnChange||a',
     'getOption||a|1',
     'getOptions||a|1',
+    'disable|setDisable|c||1',
+    'enable|setDisable|c||0',
     'addCustomFilter||c'
   ];
   util.toObject(jXrm.fn0, m);
@@ -403,9 +405,15 @@ data = function (jXrm, util) {
   util.extend(jXrm, {
     save: function (successHandler, errHandler) {
       Xrm.Page.data.save().then(successHandler, errHandler);
+      return this;
     },
     refresh: function (save, successHandler, errHandler) {
       Xrm.Page.data.refresh(save).then(successHandler, errHandler);
+      return this;
+    },
+    addOnLoad: function (handler) {
+      Xrm.Page.data.addOnLoad(handler);
+      return this;
     }
   });
   return jXrm;

@@ -27,7 +27,7 @@ module.exports = function(grunt) {
       },
       uglify: {
         options: {
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n/* https://github.com/jasonxi/jXrm',
+          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n/*! https://github.com/jasonxi/jXrm */\n',
     //      sourceMap: true,
     //      sourceMapName: 'config/sourcemap.map',
     //      beautify: true,

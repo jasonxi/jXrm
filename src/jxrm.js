@@ -258,7 +258,8 @@ attr = function (jXrm, util) {
     'disable|setDisabled|c||1',
     'enable|setDisabled|c||0',
     'addCustomFilter||c',
-    'addPreSearch||c'
+    'addPreSearch||c',
+    'removePreSearch||c'
   ];
   util.toObject(jXrm.fn0, m);
   util.extend(jXrm.fn0, {

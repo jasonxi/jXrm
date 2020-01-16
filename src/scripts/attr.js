@@ -21,6 +21,7 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         'setRequiredLevel||a',
         'required|setRequiredLevel|a||required',
         'recommended|setRequiredLevel|a||recommended',
+        'optional|setRequiredLevel|a||none',
         'getSubmitMode||a|1',
         'setSubmitMode||a',
         'getVisible||c|1',

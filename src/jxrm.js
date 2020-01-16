@@ -257,7 +257,8 @@ attr = function (jXrm, util) {
     'getOptions||a|1',
     'disable|setDisabled|c||1',
     'enable|setDisabled|c||0',
-    'addCustomFilter||c'
+    'addCustomFilter||c',
+    'addPreSearch||c'
   ];
   util.toObject(jXrm.fn0, m);
   util.extend(jXrm.fn0, {
@@ -289,6 +290,15 @@ attr = function (jXrm, util) {
       return this;
     },
     on: function (evt, handler) {
+    },
+    filter: function (entityName, fetchXml) {
+      this.controls.exec(function (c) {
+        if (c && c.addPreSearch)
+          c.addPreSearch(function () {
+            c.addCustomFilter(fetchXml, entityName);
+          });
+      });
+      return this;
     }
   });
   return jXrm;

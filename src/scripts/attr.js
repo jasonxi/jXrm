@@ -38,7 +38,7 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         'disable|setDisabled|c||1',
         'enable|setDisabled|c||0',
         'addCustomFilter||c',
-        
+        'addPreSearch||c'
     ];
     util.toObject(jXrm.fn0, m);
 
@@ -68,6 +68,15 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         },
         on: function(evt, handler) {
             
+        },
+        filter: function(entityName, fetchXml) {
+            this.controls.exec(function(c) {
+                if (c && c.addPreSearch) 
+                    c.addPreSearch(function() {
+                        c.addCustomFilter(fetchXml, entityName);
+                    });
+            });
+            return this;
         }
     });
 

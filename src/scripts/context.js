@@ -1,7 +1,7 @@
 define('context', ['core'], function(jXrm) {
     "use strict";
-    var getContext = function() {
-        var ctx = Xrm.Page.context;
+    var getContext = function(executionContext) {
+        var ctx = jXrm.getFormContext(executionContext).context;
         return ctx;
     };
     var getGlobalContext = function() {
@@ -9,14 +9,14 @@ define('context', ['core'], function(jXrm) {
         return ctx;
     };
     jXrm.context =  {
-        getUserId: function() {
-            return getContext().getUserId();
+        getUserId: function(executionContext) {
+            return getContext(executionContext).getUserId();
         },
-        getUserName: function() {
-            return getContext().getUserName();
+        getUserName: function(executionContext) {
+            return getContext(executionContext).getUserName();
         },
-        getUserRoles: function() {
-            return getContext().getUserRoles();
+        getUserRoles: function(executionContext) {
+            return getContext(executionContext).getUserRoles();
         },
         getClientUrl: function() {
             return getGlobalContext().getClientUrl();

@@ -1,5 +1,5 @@
 ;(function() {
-var xrm, selector, collection, core, global, context, utility, attr, ui, data, main;
+var xrm, selector, collection, utility, core, global, context, attr, ui, data, main;
 xrm = function () {
   if (typeof Xrm === 'undefined') {
     window.Xrm = { __namespace: true };
@@ -87,73 +87,6 @@ collection = function () {
   };
   return Collection;
 }();
-core = function (xrm, sltr, Collection) {
-  if (typeof jXrm === 'undefined') {
-    jXrm = { __namespace: true };
-  }
-  var ver = '0.02';
-  var func = function (selector, context) {
-    var attrs = this.attributes = new Collection();
-    var ctrls = this.controls = new Collection();
-    var elms = sltr.parse(selector);
-    if (elms.length > 0) {
-      elms.forEach(function (elm) {
-        switch (elm.type) {
-        case 'ID':
-          attrs.push(Xrm.Page.getAttribute(elm.id));
-          ctrls.push(Xrm.Page.getControl(elm.id));
-        }
-      });
-    } else {
-      console.log('Invalid selector.');
-    }
-  };
-  jXrm = function (selector, context) {
-    return new func(selector, context);
-  };
-  jXrm.fn0 = func.prototype = {};
-  jXrm.fn = jXrm.prototype = { version: ver };
-  jXrm.enum = {};
-  return jXrm;
-}(xrm, selector, collection);
-global = {
-  AlertOpts: {
-    width: 450,
-    height: 150
-  },
-  ConfirmOpts: {
-    width: 450,
-    height: 200
-  }
-};
-context = function (jXrm) {
-  var getContext = function () {
-    var ctx = Xrm.Page.context;
-    return ctx;
-  };
-  var getGlobalContext = function () {
-    var ctx = Xrm.Utility.getGlobalContext();
-    return ctx;
-  };
-  jXrm.context = {
-    getUserId: function () {
-      return getContext().getUserId();
-    },
-    getUserName: function () {
-      return getContext().getUserName();
-    },
-    getUserRoles: function () {
-      return getContext().getUserRoles();
-    },
-    getClientUrl: function () {
-      return getGlobalContext().getClientUrl();
-    },
-    get isOffline() {
-      return getGlobalContext().client.isOffline();
-    }
-  };
-  return jXrm;
-}(core);
 utility = {
   extend: function (t, s) {
     if (typeof Object.assign != 'function') {
@@ -217,6 +150,87 @@ utility = {
     return obj;
   }
 };
+core = function (xrm, sltr, Collection, util) {
+  if (typeof jXrm === 'undefined') {
+    jXrm = { __namespace: true };
+  }
+  var ver = '0.03';
+  var getFormContext = function (context) {
+    if (context && context.getFormContext) {
+      return context.getFormContext();
+    } else {
+      return jXrm.formContext || Xrm.Page;
+    }
+  };
+  var func = function (selector, context) {
+    var attrs = this.attributes = new Collection();
+    var ctrls = this.controls = new Collection();
+    var frmCtx = getFormContext(context);
+    var elms = sltr.parse(selector);
+    if (elms.length > 0) {
+      elms.forEach(function (elm) {
+        switch (elm.type) {
+        case 'ID':
+          attrs.push(frmCtx.getAttribute(elm.id));
+          ctrls.push(frmCtx.getControl(elm.id));
+        }
+      });
+    } else {
+      console.log('Invalid selector.');
+    }
+  };
+  jXrm = function (selector, context) {
+    return new func(selector, context);
+  };
+  jXrm.fn0 = func.prototype = {};
+  jXrm.fn = jXrm.prototype = { version: ver };
+  util.extend(jXrm, {
+    getFormContext: getFormContext,
+    set executeContext(context) {
+      jXrm.formContext = getFormContext(context);
+    },
+    enum: {}
+  });
+  return jXrm;
+}(xrm, selector, collection, utility);
+global = {
+  AlertOpts: {
+    width: 450,
+    height: 150
+  },
+  ConfirmOpts: {
+    width: 450,
+    height: 200
+  }
+};
+context = function (jXrm) {
+  var getContext = function (executionContext) {
+    var ctx = jXrm.getFormContext(executionContext).context;
+    return ctx;
+  };
+  var getGlobalContext = function () {
+    var ctx = Xrm.Utility.getGlobalContext();
+    return ctx;
+  };
+  jXrm.context = {
+    getUserId: function (executionContext) {
+      return getContext(executionContext).getUserId();
+    },
+    getUserName: function (executionContext) {
+      return getContext(executionContext).getUserName();
+    },
+    getUserRoles: function (executionContext) {
+      return getContext(executionContext).getUserRoles();
+    },
+    getClientUrl: function () {
+      return getGlobalContext().getClientUrl();
+    },
+    get isOffline() {
+      return getGlobalContext().client.isOffline();
+    }
+  };
+  return jXrm;
+}(core);
 attr = function (jXrm, util) {
   util.extend(jXrm.enum, {
     RequiredLevel: {
@@ -415,16 +429,16 @@ ui = function (jXrm, util, global) {
 }(core, utility, global);
 data = function (jXrm, util) {
   util.extend(jXrm, {
-    save: function (successHandler, errHandler) {
-      Xrm.Page.data.save().then(successHandler, errHandler);
+    save: function (successHandler, errHandler, context) {
+      jXrm.getFormContext(context).data.save().then(successHandler, errHandler);
       return this;
     },
-    refresh: function (save, successHandler, errHandler) {
-      Xrm.Page.data.refresh(save).then(successHandler, errHandler);
+    refresh: function (save, successHandler, errHandler, context) {
+      jXrm.getFormContext(context).data.refresh(save).then(successHandler, errHandler);
       return this;
     },
-    addOnLoad: function (handler) {
-      Xrm.Page.data.addOnLoad(handler);
+    addOnLoad: function (handler, context) {
+      jXrm.getFormContext(context).data.addOnLoad(handler);
       return this;
     }
   });

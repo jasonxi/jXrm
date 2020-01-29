@@ -42,7 +42,7 @@ define(['xrm', 'selector', 'collection', 'utility'], function(xrm, sltr, Collect
 
     util.extend(jXrm, {
         getFormContext: getFormContext,
-        set executeContext(context) {
+        set executionContext(context) {
             jXrm.formContext = getFormContext(context);
         },
         enum: {}

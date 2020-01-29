@@ -1,4 +1,24 @@
 define('ui', ['core', 'utility', 'global'], function(jXrm, util, global) {
+    var toggleForm = function(attrs, context, disabled) {
+        var controls = jXrm.getFormContext(context).ui.controls.get();
+        controls.forEach(function(c) {
+            if ((!attrs || attrs.indexOf(c.getName()) < 0) && c.setDisabled) c.setDisabled(disabled);
+        });
+    };
+
+    var toggleTab = function(tabName, context, visible) {
+        var tab = jXrm.getFormContext(context).ui.tabs.get(tabName);
+        if (tab) tab.setVisible(visible);
+    };
+
+    var toggleSection = function(tabName, secName, context, visible) {
+        var tab = jXrm.getFormContext(context).ui.tabs.get(tabName);
+        if (tab) {
+            var sec = tab.sections.get(secName);
+            if (sec) sec.setVisible(visible);
+        }
+    };
+
     util.extend(jXrm, {
         // alertStrings	Object	Yes	The strings to be used in the alert dialog. The object contains the following attributes:
         //     - confirmButtonLabel: (Optional) String. The confirm button label. If you do not specify the button label, OK is used as the button label.
@@ -103,6 +123,24 @@ define('ui', ['core', 'utility', 'global'], function(jXrm, util, global) {
         // data	String	No	Data to be passed into the data parameter.
         openWebResource: function(webResourceName,windowOptions,data) {
             Xrm.Navigation.openWebResource(webResourceName,windowOptions,data);
+        },
+        disableForm: function(attrs, context) {
+            toggleForm(attrs, context, true);
+        },
+        enableForm: function(attrs, context) {
+            toggleForm(attrs, context, false);
+        },
+        showTab: function(tabName, context) {
+            toggleTab(tabName, context, true);
+        },
+        hideTab: function(tabName, context) {
+            toggleTab(tabName, context, false);
+        },
+        showSection: function(tabName, secName, context) {
+            toggleSection(tabName, secName, context, true);
+        },
+        hideSection: function(tabName, secName, context) {
+            toggleSection(tabName, secName, context, false);
         }
     });
 

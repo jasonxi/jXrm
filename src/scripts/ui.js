@@ -7,8 +7,10 @@ define('ui', ['core', 'utility', 'global'], function(jXrm, util, global) {
     };
 
     var toggleTab = function(tabName, context, visible) {
-        var tab = jXrm.getFormContext(context).ui.tabs.get(tabName);
-        if (tab) tab.setVisible(visible);
+        tabName.replace(' ', '').split(',').forEach(function(n){
+            var tab = jXrm.getFormContext(context).ui.tabs.get(n);
+            if (tab) tab.setVisible(visible);
+        })
     };
 
     var toggleSection = function(tabName, secName, context, visible) {

@@ -204,29 +204,29 @@ global = {
   }
 };
 context = function (jXrm) {
-  var getContext = function (executionContext) {
-    var ctx = jXrm.getFormContext(executionContext).context;
-    return ctx;
-  };
   var getGlobalContext = function () {
-    var ctx = Xrm.Utility.getGlobalContext();
-    return ctx;
+    return Xrm.Utility.getGlobalContext ? Xrm.Utility.getGlobalContext() : Xrm.Page.context;
   };
   jXrm.context = {
-    getUserId: function (executionContext) {
-      return getContext(executionContext).getUserId();
+    get userId() {
+      var ctx = getGlobalContext();
+      return ctx.userSettings ? ctx.userSettings.userId : ctx.getUserId();
     },
-    getUserName: function (executionContext) {
-      return getContext(executionContext).getUserName();
+    get userName() {
+      var ctx = getGlobalContext();
+      return ctx.userSettings ? ctx.userSettings.userName : ctx.getUserName();
     },
-    getUserRoles: function (executionContext) {
-      return getContext(executionContext).getUserRoles();
+    get roles() {
+      var ctx = getGlobalContext();
+      return ctx.userSettings ? ctx.userSettings.securityRoles : ctx.getUserRoles();
     },
-    getClientUrl: function () {
-      return getGlobalContext().getClientUrl();
+    get clientUrl() {
+      var ctx = getGlobalContext();
+      return ctx.getClientUrl ? ctx.getClientUrl() : undefined;
     },
     get isOffline() {
-      return getGlobalContext().client.isOffline();
+      var ctx = getGlobalContext();
+      return ctx.client ? ctx.client.isOffline() : undefined;
     }
   };
   return jXrm;
@@ -461,6 +461,9 @@ ui = function (jXrm, util, global) {
     },
     hideSection: function (tabName, secName, context) {
       toggleSection(tabName, secName, context, false);
+    },
+    getFormType: function (context) {
+      return jXrm.getFormContext(context).ui.getFormType();
     }
   });
   return jXrm;

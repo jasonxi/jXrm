@@ -141,6 +141,9 @@ define('ui', ['core', 'utility', 'global'], function(jXrm, util, global) {
         },
         hideSection: function(tabName, secName, context) {
             toggleSection(tabName, secName, context, false);
+        },
+        getFormType: function(context) {
+            return jXrm.getFormContext(context).ui.getFormType();
         }
     });
 

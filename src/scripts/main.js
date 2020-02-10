@@ -3,6 +3,8 @@ require([
     'global',
     'context',
     'attr',
+    'tab',
+    'section',
     'ui',
     'data'
     ], function(jXrm) {

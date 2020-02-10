@@ -7,8 +7,8 @@ define('ui', ['core', 'utility', 'global'], function(jXrm, util, global) {
     };
 
     var toggleTab = function(tabName, context, visible) {
-        tabName.replace(' ', '').split(',').forEach(function(n){
-            var tab = jXrm.getFormContext(context).ui.tabs.get(n);
+        tabName.split(',').forEach(function(n){
+            var tab = jXrm.getFormContext(context).ui.tabs.get(n.replace(' ', ''));
             if (tab) tab.setVisible(visible);
         })
     };

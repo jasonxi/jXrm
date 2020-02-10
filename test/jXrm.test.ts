@@ -211,10 +211,34 @@ describe("jXrm unit tests", ()=> {
   // Selector tests
   describe("Test selector functions", ()=> {
     var selector = require('../src/scripts/selector');
-    it('not null', ()=>{
+    it('capture attributes', ()=>{
       var ids = selector.parse('#firstname, #lastname');
       //console.log(ids);
-      assert.notEqual(0, ids.length);
-    })
+      assert.equal(2, ids.length);
+      assert.equal('ID', ids[0].type);
+      assert.equal('firstname', ids[0].id);
+      assert.equal('ID', ids[1].type);
+      assert.equal('lastname', ids[1].id);
+    });
+
+    it('capture sections', ()=>{
+      var ids = selector.parse('Section #sec_id1, s #sec_id2, SEC #sec_id3');
+      assert.equal(3, ids.length);
+      assert.equal('SECTION', ids[0].type);
+      assert.equal('sec_id1', ids[0].id);
+      assert.equal('SECTION', ids[1].type);
+      assert.equal('sec_id2', ids[1].id);
+      assert.equal('SECTION', ids[2].type);
+      assert.equal('sec_id3', ids[2].id);
+    });
+
+    it('capture tabs', ()=>{
+      var ids = selector.parse('tab #tab1, t #tab2');
+      assert.equal(2, ids.length);
+      assert.equal('TAB', ids[0].type);
+      assert.equal('tab1', ids[0].id);
+      assert.equal('TAB', ids[1].type);
+      assert.equal('tab2', ids[1].id);
+    });
   })
 })

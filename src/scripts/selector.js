@@ -46,10 +46,11 @@ define([], function() {
 
     matchExpr = {
         ID: new RegExp("^#(" + identifier + ")"),
-        TAG: new RegExp("^%(" + identifier + ")"),
-        SECTION: new RegExp("^$(" + identifier + ")"),
-        CLASS: new RegExp("^\\.(" + identifier + ")"),
-        ATTR: new RegExp("^" + attributes)
+    //    TAG: new RegExp("^%(" + identifier + ")"),
+        TAB: new RegExp("^(?:tab|t)" + whitespace + "#(" + identifier + ")", 'i'),
+        SECTION: new RegExp("^(?:section|s|sec)" + whitespace + "#(" + identifier + ")", 'i')
+    //    CLASS: new RegExp("^\\.(" + identifier + ")"),
+    //    ATTR: new RegExp("^" + attributes)
     },
 
     rsibling = /[+~]/,

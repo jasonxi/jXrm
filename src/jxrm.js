@@ -1,5 +1,5 @@
 ;(function() {
-var xrm, selector, collection, utility, core, global, context, attr, ui, data, main;
+var xrm, selector, collection, utility, core, global, context, attr, tab, section, ui, data, main;
 xrm = function () {
   if (typeof Xrm === 'undefined') {
     window.Xrm = { __namespace: true };
@@ -23,10 +23,10 @@ selector = function () {
     // Leading and non-escaped trailing whitespace, capturing some non-whitespace characters preceding the latter
     rwhitespace = new RegExp(whitespace + '+', 'g'), rtrim = new RegExp('^' + whitespace + '+|((?:^|[^\\\\])(?:\\\\.)*)' + whitespace + '+$', 'g'), rcomma = new RegExp('^' + whitespace + '*,' + whitespace + '*'), rcombinators = new RegExp('^' + whitespace + '*([>+~]|' + whitespace + ')' + whitespace + '*'), rdescend = new RegExp(whitespace + '|>'), rpseudo = new RegExp(pseudos), ridentifier = new RegExp('^' + identifier + '$'), matchExpr = {
       ID: new RegExp('^#(' + identifier + ')'),
-      TAG: new RegExp('^%(' + identifier + ')'),
-      SECTION: new RegExp('^$(' + identifier + ')'),
-      CLASS: new RegExp('^\\.(' + identifier + ')'),
-      ATTR: new RegExp('^' + attributes)
+      //    TAG: new RegExp("^%(" + identifier + ")"),
+      TAB: new RegExp('^(?:tab|t)' + whitespace + '#(' + identifier + ')', 'i'),
+      SECTION: new RegExp('^(?:section|s|sec)' + whitespace + '#(' + identifier + ')', 'i')  //    CLASS: new RegExp("^\\.(" + identifier + ")"),
+                                                                                    //    ATTR: new RegExp("^" + attributes)
     }, rsibling = /[+~]/,
     // CSS escapes
     // http://www.w3.org/TR/CSS21/syndata.html#escaped-characters
@@ -124,7 +124,21 @@ utility = {
         if (!p[1])
           p[1] = p[0];
         obj[p[0]] = function () {
-          var c = p[2] === 'a' ? this.attributes : this.controls;
+          var c = null;
+          switch (p[2]) {
+          case 'a':
+            c = this.attributes;
+            break;
+          case 'c':
+            c = this.controls;
+            break;
+          case 't':
+            c = this.tabs;
+            break;
+          case 's':
+            c = this.sections;
+            break;
+          }
           var args = [];
           for (var i = 0; i < arguments.length; i++)
             args[i] = arguments[i];
@@ -163,16 +177,42 @@ core = function (xrm, sltr, Collection, util) {
     }
   };
   var func = function (selector, context) {
-    var attrs = this.attributes = new Collection();
-    var ctrls = this.controls = new Collection();
+    var self = this;
+    //        this.prototype = jXrm.fn0;
     var frmCtx = getFormContext(context);
     var elms = sltr.parse(selector);
     if (elms.length > 0) {
       elms.forEach(function (elm) {
         switch (elm.type) {
         case 'ID':
-          attrs.push(frmCtx.getAttribute(elm.id));
-          ctrls.push(frmCtx.getControl(elm.id));
+          self.type = 'a';
+          if (!self.attributes) {
+            self.attributes = new Collection();
+            self.controls = new Collection();
+          }
+          self.attributes.push(frmCtx.getAttribute(elm.id));
+          self.controls.push(frmCtx.getControl(elm.id));
+          break;
+        case 'TAB':
+          self.type = 't';
+          if (!self.tabs)
+            self.tabs = new Collection();
+          self.tabs.push(frmCtx.ui.tabs.get(elm.id));
+          break;
+        case 'SECTION':
+          self.type = 's';
+          if (!self.sections)
+            self.sections = new Collection();
+          var tabs = frmCtx.ui.tabs.get();
+          if (tabs) {
+            tabs.forEach(function (tab) {
+              var sec = tab.sections.get(elm.id);
+              if (sec) {
+                self.sections.push(sec);
+              }
+            });
+          }
+          break;
         }
       });
     } else {
@@ -180,9 +220,24 @@ core = function (xrm, sltr, Collection, util) {
     }
   };
   jXrm = function (selector, context) {
-    return new func(selector, context);
+    var r = new func(selector, context);
+    switch (r.type) {
+    case 'a':
+      r.__proto__ = jXrm.fn0;
+      break;
+    case 't':
+      r.__proto__ = jXrm.fn1;
+      break;
+    case 's':
+      r.__proto__ = jXrm.fn2;
+      break;
+    }
+    return r;
   };
-  jXrm.fn0 = func.prototype = {};
+  jXrm.fn0 = {};
+  jXrm.fn1 = {};
+  jXrm.fn2 = {};
+  //    func.prototype = jXrm.fn0 = { };
   jXrm.fn = jXrm.prototype = { version: ver };
   util.extend(jXrm, {
     getFormContext: getFormContext,
@@ -318,6 +373,48 @@ attr = function (jXrm, util) {
   });
   return jXrm;
 }(core, utility);
+tab = function (jXrm, util) {
+  // method name | sdk method name | collection | return value | paramenter
+  var m = [
+    'setVisible||t',
+    'show|setVisible|t||1',
+    'hide|setVisible|t||0',
+    'disable|setDisabled|t||1',
+    'enable|setDisabled|t||0'
+  ];
+  util.toObject(jXrm.fn1, m);
+  util.extend(jXrm.fn1, {
+    toggleVisible: function () {
+      this.tabs.exec(function (c) {
+        if (c && c.setVisible)
+          c.setVisible(!c.getVsible());
+      });
+      return this;
+    }
+  });
+  return jXrm;
+}(core, utility);
+section = function (jXrm, util) {
+  // method name | sdk method name | collection | return value | paramenter
+  var m = [
+    'setVisible||s',
+    'show|setVisible|s||1',
+    'hide|setVisible|s||0',
+    'disable|setDisabled|s||1',
+    'enable|setDisabled|s||0'
+  ];
+  util.toObject(jXrm.fn2, m);
+  util.extend(jXrm.fn2, {
+    toggleVisible: function () {
+      this.sections.exec(function (c) {
+        if (c && c.setVisible)
+          c.setVisible(!c.getVsible());
+      });
+      return this;
+    }
+  });
+  return jXrm;
+}(core, utility);
 ui = function (jXrm, util, global) {
   var toggleForm = function (attrs, context, disabled) {
     var controls = jXrm.getFormContext(context).ui.controls.get();
@@ -327,8 +424,8 @@ ui = function (jXrm, util, global) {
     });
   };
   var toggleTab = function (tabName, context, visible) {
-    tabName.replace(' ', '').split(',').forEach(function (n) {
-      var tab = jXrm.getFormContext(context).ui.tabs.get(n);
+    tabName.split(',').forEach(function (n) {
+      var tab = jXrm.getFormContext(context).ui.tabs.get(n.replace(' ', ''));
       if (tab)
         tab.setVisible(visible);
     });

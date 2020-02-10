@@ -37,7 +37,21 @@ define([], function() {
                     var p = prop.split('|');
                     if (!p[1]) p[1] = p[0];
                     obj[p[0]] = function() {
-                        var c = p[2] === 'a'? this.attributes : this.controls;
+                        var c = null;
+                        switch (p[2]) {
+                            case 'a':
+                                c = this.attributes;
+                                break;
+                            case 'c':
+                                c = this.controls;
+                                break;
+                            case 't':
+                                c = this.tabs;
+                                break;
+                            case 's':
+                                c = this.sections;
+                                break;
+                        }
                         var args = [];
                         for(var i=0; i<arguments.length; i++)
                             args[i] = arguments[i];

@@ -63,7 +63,7 @@ define('attr', ['core', 'utility'], function(jXrm, util) {
         },
         toggleVisible : function() {
             this.controls.exec(function(c) {
-                if (c && c.setVisible) c.setVisible(!c.getVsible());
+                if (c && c.setVisible) c.setVisible(!c.getVisible());
             });
             return this;
         },

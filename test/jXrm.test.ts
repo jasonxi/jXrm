@@ -1,6 +1,7 @@
 import {JSDOM} from 'jsdom';
 import { XrmMockGenerator,  ClientContextMock, ContextMock, UserSettingsMock, UiMock, FormSelectorMock, ItemCollectionMock, FormItemMock, EntityMock } from "xrm-mock";
 import assert from "assert";
+import { before } from 'mocha';
 
 describe("jXrm unit tests", ()=> {
   const dom = new JSDOM('<!DOCTYPE html><html><head></head><body></body></html>');
@@ -240,5 +241,100 @@ describe("jXrm unit tests", ()=> {
       assert.equal('TAB', ids[1].type);
       assert.equal('tab2', ids[1].id);
     });
+  })
+
+  // Tab functions
+  describe("Test tab functions", () => {
+    before(() => {
+      var sections = new ItemCollectionMock<Xrm.Controls.Section>([
+          XrmMockGenerator.Section.createSection("sectionLogicalName", "Section Label", true, undefined, undefined)
+      ]);
+      XrmMockGenerator.Tab.createTab('tab_1', 'General', true, undefined, undefined, sections);
+      XrmMockGenerator.Tab.createTab('tab_2', 'Tab 2', true, undefined, undefined, sections);
+    });
+
+    describe("Get tab Label", () => {
+      it("should get tab", ()=> {
+        let tab = jXrm('tab #tab_2');
+        assert.equal(tab.getLabel(), 'Tab 2');
+        assert.equal(tab.label, 'Tab 2');
+      })
+    });
+
+    describe("Set tab Label", () => {
+      it("should set tab label", ()=> {
+        let tab1 = jXrm('tab #tab_1').setLabel('Tab 1 Changed');
+        assert.equal(tab1.getLabel(), 'Tab 1 Changed');
+        let tab2 = jXrm('tab #tab_2');
+        tab2.label = 'Tab 2 Changed Again';
+        assert.equal(tab2.label, 'Tab 2 Changed Again');
+      });
+    });
+
+    describe("Set tab Display State", () => {
+      it("should set tab state", ()=> {
+        let tab = jXrm('tab #tab_2').setDisplayState('collapsed');
+        assert.equal(tab.getDisplayState(), 'collapsed');
+        
+        tab = jXrm('tab #tab_2');
+        tab.state = 'expanded';
+        assert.equal(tab.state, 'expanded');
+      });
+    });
+
+    describe("Set tab Visibility", () => {
+      it("should set tab visibility", ()=> {
+        let tab = jXrm('tab #tab_2').setVisible(false);
+        assert.equal(tab.getVisible(), false);
+        
+        tab = jXrm('tab #tab_2');
+        tab.visible = true;
+        assert.equal(tab.visible, true);
+      });
+    });
+
+
+  })
+
+  // Section functions
+  describe("Test section functions", () => {
+    before(() => {
+      var sections = new ItemCollectionMock<Xrm.Controls.Section>([
+        XrmMockGenerator.Section.createSection("sec_1", "First Section Label", true, undefined, undefined),
+        XrmMockGenerator.Section.createSection("sec_2", "Second Section Label", true, undefined, undefined),
+      ]);
+      XrmMockGenerator.Tab.createTab('tab_1', 'General', true, undefined, undefined, sections);
+    });
+
+    describe("Get section Label", () => {
+      it("should get label", ()=> {
+        let section = jXrm('section #sec_1');
+        assert.equal(section.getLabel(), 'First Section Label');
+        assert.equal(section.label, 'First Section Label');
+      })
+    });
+
+    describe("Set section Label", () => {
+      it("should set section label", ()=> {
+        let section1 = jXrm('sec #sec_2').setLabel('Second Section Label 2');
+        assert.equal(section1.getLabel(), 'Second Section Label 2');
+        let section2 = jXrm('sec #sec_2');
+        section2.label = 'Second Section Label 3';
+        assert.equal(section2.label, 'Second Section Label 3');
+      });
+    });
+
+    describe("Set section Visibility", () => {
+      it("should set section visibility", ()=> {
+        let section = jXrm('s #sec_2').setVisible(false);
+        assert.equal(section.getVisible(), false);
+        
+        section = jXrm('s #sec_2');
+        section.visible = true;
+        assert.equal(section.visible, true);
+      });
+    });
+
+
   })
 })

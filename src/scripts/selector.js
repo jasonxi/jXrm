@@ -71,7 +71,7 @@ define([], function() {
                         t.push({
                             type: prop,
                             value: match.shift(),
-                            id: match.shift().toLowerCase()
+                            id: match.shift()
                         });
                         break;
                     }

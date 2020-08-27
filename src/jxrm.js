@@ -1,5 +1,5 @@
 ;(function() {
-var xrm, selector, collection, utility, core, global, context, attr, tab, section, ui, data, main;
+var xrm, selector, collection, utility, core, global, context, attr, tab, section, entity, ui, data, main;
 xrm = function () {
   if (typeof Xrm === 'undefined') {
     window.Xrm = { __namespace: true };
@@ -42,7 +42,7 @@ selector = function () {
             t.push({
               type: prop,
               value: match.shift(),
-              id: match.shift().toLowerCase()
+              id: match.shift()
             });
             break;
           }
@@ -501,6 +501,32 @@ section = function (jXrm, util) {
       });
     }
   });
+  return jXrm;
+}(core, utility);
+entity = function (jXrm, util) {
+  jXrm.entity = {
+    get id() {
+      return (jXrm.formContext || Xrm.Page).data.entity.getId();
+    },
+    get dataXml() {
+      return (jXrm.formContext || Xrm.Page).data.entity.getDataXml();
+    },
+    get entityName() {
+      return (jXrm.formContext || Xrm.Page).data.entity.getEntityName();
+    },
+    get name() {
+      return (jXrm.formContext || Xrm.Page).data.entity.getPrimaryAttributeValue();
+    },
+    get valid() {
+      return (jXrm.formContext || Xrm.Page).data.entity.isValid();
+    },
+    get isDirty() {
+      return (jXrm.formContext || Xrm.Page).data.entity.getIsDirty();
+    },
+    get entityReference() {
+      return (jXrm.formContext || Xrm.Page).data.entity.getEntityReference();
+    }
+  };
   return jXrm;
 }(core, utility);
 ui = function (jXrm, util, global) {

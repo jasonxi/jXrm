@@ -5,7 +5,7 @@ require([
     'attr',
     'tab',
     'section',
-//    'entity',
+    'entity',
     'ui',
     'data'
     ], function(jXrm) {

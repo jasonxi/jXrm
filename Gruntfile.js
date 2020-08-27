@@ -27,7 +27,7 @@ module.exports = function(grunt) {
       },
       uglify: {
         options: {
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n/*! https://github.com/jasonxi/jXrm */\n',
+          banner: '/*! <%= pkg.name %> - v<%= pkg.version %> */\n/*! https://github.com/jasonxi/jXrm */\n',
     //      sourceMap: true,
     //      sourceMapName: 'config/sourcemap.map',
     //      beautify: true,
@@ -51,12 +51,18 @@ module.exports = function(grunt) {
       //     run: true
       //   }
       // }
-  
+      version: {
+        // options: {},
+        project: {
+          src: ['package.json', 'bower.json', 'myplugin.jquery.json']
+        }
+      }
     });
   
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-version');
 //    grunt.loadNpmTasks('grunt-mocha');
 
     // Default task(s).

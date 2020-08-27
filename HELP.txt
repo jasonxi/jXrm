@@ -1,0 +1,9 @@
+Test:
+> npm t
+
+Versioning:
+> grunt version::patch
+> grunt version::minor
+
+Build:
+> grunt

@@ -12,7 +12,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "expressjs": "^1.0.1",
-    "grunt": "^1.0.4",
+    "grunt": "^1.5.2",
     "requirejs": "^2.3.6"
   },
   "devDependencies": {

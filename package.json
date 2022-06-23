@@ -29,7 +29,7 @@
     "grunt-contrib-uglify": "^4.0.1",
     "grunt-mocha": "^1.2.0",
     "grunt-version": "^2.0.0",
-    "jsdom": "^15.1.1",
+    "jsdom": "^16.5.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
